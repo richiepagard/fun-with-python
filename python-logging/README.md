@@ -3,7 +3,7 @@ A collection of simple exercises to practice and explore Python's `logging` modu
 
 ---
 
-## Easy Level
+## Log User Input
 
 ### Basic Logging
 - **Ask for the user for their name.**
@@ -15,7 +15,7 @@ A collection of simple exercises to practice and explore Python's `logging` modu
 ---
 
 ### Log To File
-- Modify the previous exercise to log messages to a file name instead of prnting to the console.
+- Modify the previous exercise to log messages to a file name instead of printing to the console.
 
 ---
 
