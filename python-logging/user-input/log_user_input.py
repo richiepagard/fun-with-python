@@ -16,8 +16,8 @@ def user(first_name: str, last_name: str, username: str) -> str:
         last_name (str): User's last name. Converts it to a title case.
         username (str): User's username. Converts it to a lower case.
 
-    Return:
-        Return a string to say user has just logged in with its username.
+    Returns:
+        string: Reports user has just logged in.
     """
 
     first_name = first_name.title()
