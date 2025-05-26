@@ -29,7 +29,7 @@ if not logger.hasHandlers():
     logger.addHandler(stream_handler)
 
 
-def devide(x: float, y: float) -> float:
+def divide(x: float, y: float) -> float:
     """
     Devide `x` by `y` and log the process.
 

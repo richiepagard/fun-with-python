@@ -1,7 +1,7 @@
 import os
 import logging
 
-from utils import devide
+from utils import divide
 
 
 def make_directory(directory_name: str) -> None:
@@ -80,7 +80,7 @@ def main():
     denominator = denominator or 0
 
     # Logs the `divide` function
-    result = devide(numerator, denominator)
+    result = divide(numerator, denominator)
     logger.info("Division result: {}".format(result))
     logger.info("-" * 40)
 
