@@ -76,7 +76,27 @@ class TestCalculator(unittest.TestCase):
 
         with self.assertRaises(ZeroDivisionError):
             self.zero_second_number.divide()
+    
+    def test_zero_numbers(self):
+        """
+        Test `0` for both inputs on all calculator methods.
+        """
+        self.assertEqual(self.zero_numbers.add(), 0)
+        self.assertEqual(self.zero_numbers.subtract(), 0)
+        self.assertEqual(self.zero_numbers.multiply(), 0)
 
+        with self.assertRaises(ZeroDivisionError):
+            self.zero_numbers.divide()
+
+    def test_type_error(self):
+        """
+        Test `type error` exception occured on all calculator methods.
+        Use `subTest` to test an instance on all calculator methods.
+        """
+        for method_name in ['add', 'subtract', 'multiply', 'divide']:
+            with self.subTest(method=method_name):
+                with self.assertRaises(TypeError):
+                    getattr(self.type_error, method_name)()
 
 if __name__ == '__main__':
     unittest.main()
