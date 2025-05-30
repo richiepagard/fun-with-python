@@ -10,12 +10,16 @@ Functions:
 """
 
 import logging
+import os
+
+# Ensure logs directory exists
+os.makedirs("../logs", exist_ok=True)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 # Set and config file handler
-file_handler = logging.FileHandler("calculation_logs.log")
+file_handler = logging.FileHandler("../logs/calculation_logs.log")
 file_handler.setLevel(logging.WARNING)
 file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 file_handler.setFormatter(file_formatter)
@@ -42,6 +46,17 @@ class Calculator:
     """
 
     def __init__(self, first_number: float, second_number: float):
+        """
+        Initialize method for the class.
+
+        Check if the first and second numbers are not integer or float,
+        raise TypeError exception.
+        """
+
+        if not isinstance(first_number, (int, float)) or\
+            not isinstance(second_number, (int, float)):
+            raise TypeError("Inputs must be numbers.")
+
         self.first_number = first_number
         self.second_number = second_number
 
@@ -56,15 +71,8 @@ class Calculator:
     def multiply(self) -> float:
         """
         Multiply result of two given numbers.
-        Check if the second number is a string,
-        then raise TypeError exception.
         """
-        result = self.first_number * self.second_number
-
-        if isinstance(self.second_number, str):
-            raise TypeError
-
-        return result
+        return self.first_number * self.second_number
 
     def divide(self) -> float:
         """ Division result of two provided numbers. """

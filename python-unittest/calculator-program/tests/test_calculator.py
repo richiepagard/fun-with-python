@@ -8,7 +8,7 @@ Classes:
 
 import unittest
 
-from calculator import Calculator
+from calculator.calculator import Calculator
 
 
 class TestCalculator(unittest.TestCase):
@@ -34,7 +34,6 @@ class TestCalculator(unittest.TestCase):
 
         self.zero_second_number = Calculator(67, 0)
         self.zero_numbers = Calculator(0, 0)
-        self.type_error = Calculator(9, 'richie')
 
     def test_simple_integer(self):
         """
@@ -76,7 +75,7 @@ class TestCalculator(unittest.TestCase):
 
         with self.assertRaises(ZeroDivisionError):
             self.zero_second_number.divide()
-    
+
     def test_zero_numbers(self):
         """
         Test `0` for both inputs on all calculator methods.
@@ -90,13 +89,10 @@ class TestCalculator(unittest.TestCase):
 
     def test_type_error(self):
         """
-        Test `type error` exception occured on all calculator methods.
-        Use `subTest` to test an instance on all calculator methods.
+        Test `type error` exception occured.    
         """
-        for method_name in ['add', 'subtract', 'multiply', 'divide']:
-            with self.subTest(method=method_name):
-                with self.assertRaises(TypeError):
-                    getattr(self.type_error, method_name)()
+        with self.assertRaises(TypeError):
+            Calculator(9, 'richie')
 
 if __name__ == '__main__':
     unittest.main()
