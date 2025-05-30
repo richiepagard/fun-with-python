@@ -54,8 +54,17 @@ class Calculator:
         return self.first_number - self.second_number
 
     def multiply(self) -> float:
-        """ Multiply result of two given numbers. """
-        return self.first_number * self.second_number
+        """
+        Multiply result of two given numbers.
+        Check if the second number is a string,
+        then raise TypeError exception.
+        """
+        result = self.first_number * self.second_number
+
+        if isinstance(self.second_number, str):
+            raise TypeError
+
+        return result
 
     def divide(self) -> float:
         """ Division result of two provided numbers. """
