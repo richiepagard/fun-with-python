@@ -20,7 +20,7 @@ def check_url_status_code(url: str) -> int:
     Returns:
         status code (int): The status code of the given url.
     """
-    page = requests.get(url)
+    page = requests.get(url, timeout=10)
     page_status_code = page.status_code
 
     return page_status_code
