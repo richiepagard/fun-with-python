@@ -8,6 +8,31 @@ Methods:
 """
 
 import requests
+import logging
+import os
+
+# Ensure logs directory exists
+os.makedirs("../logs", exist_ok=True)
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# Set and config file handler
+file_handler = logging.FileHandler("../logs/request_logs.log")
+file_handler.setLevel(logging.WARNING)
+file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+file_handler.setFormatter(file_formatter)
+
+# Set and config stream handler
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.DEBUG)
+stream_formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
+stream_handler.setFormatter(stream_formatter)
+
+# Add handlers to the logger
+if not logger.hasHandlers():
+    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
 
 
 def check_url_status_code(url: str, timeout: int) -> int:
@@ -20,8 +45,17 @@ def check_url_status_code(url: str, timeout: int) -> int:
     Returns:
         status code (int): The status code of the given url.
     """
-    page = requests.get(url=url, timeout=timeout)
-    page_status_code = page.status_code
+    try:
+        page = requests.get(url=url, timeout=timeout)
+        logger.info("Sent a request to the \"%s\" URL with \"%i\" seconds timeout.", url, timeout)
+        page_status_code = page.status_code
+        logger.info("The status code of \"%s\" URL is \"%i\"", url, page_status_code)
+
+    except requests.exceptions.Timeout as timeout_exception:
+        logger.exception("Timeout error exception occured. %s", timeout_exception)
+        logger.warning("-" * 40)
+        # Re-raise the occured exception
+        raise
 
     return page_status_code
 
@@ -32,7 +66,7 @@ def main():
     Gets user inputs and logs them, also handle the possible exceptions.
     """
 
-    print(check_url_status_code('https://api.github.com', 10))
+    print(check_url_status_code('https://api.github.com', 0.1))
 
 
 if __name__ == '__main__':
