@@ -7,9 +7,15 @@ Methods:
     send request to it and then return the status code.
 """
 
-import requests
 import logging
 import os
+
+import requests
+from requests.exceptions import(
+    Timeout, ConnectionError, HTTPError,
+    RequestException, MissingSchema, InvalidURL
+)
+
 
 # Ensure logs directory exists
 os.makedirs("../logs", exist_ok=True)
@@ -51,8 +57,38 @@ def check_url_status_code(url: str, timeout: int) -> int:
         page_status_code = page.status_code
         logger.info("The status code of \"%s\" URL is \"%i\"", url, page_status_code)
 
-    except requests.exceptions.Timeout as timeout_exception:
-        logger.exception("Timeout error exception occured. %s", timeout_exception)
+    except MissingSchema:
+        logger.exception("Missing schema. Include \"http\" or \"https\".")
+        logger.warning("-" * 40)
+        # Re-raise the occured exception
+        raise
+
+    except InvalidURL:
+        logger.exception("The URL is not properly formatted.")
+        logger.warning("-" * 40)
+        # Re-raise the occured exception
+        raise
+
+    except Timeout:
+        logger.exception("Timeout error exception occured.")
+        logger.warning("-" * 40)
+        # Re-raise the occured exception
+        raise
+
+    except ConnectionError:
+        logger.exception("Failed to connect to the server.")
+        logger.warning("-" * 40)
+        # Re-raise the occured exception
+        raise
+
+    except HTTPError as http_error:
+        logger.exception("HTTP error occurred: %s", http_error.response.status_code)
+        logger.warning("-" * 40)
+        # Re-raise the occured exception
+        raise
+
+    except RequestException:
+        logger.exception("Request Error. The page you requested does not exists.")
         logger.warning("-" * 40)
         # Re-raise the occured exception
         raise
@@ -66,7 +102,7 @@ def main():
     Gets user inputs and logs them, also handle the possible exceptions.
     """
 
-    print(check_url_status_code('https://api.github.com', 0.1))
+    print(check_url_status_code('https://api.github.com', 5))
 
 
 if __name__ == '__main__':
