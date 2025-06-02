@@ -24,9 +24,19 @@ class TestURLStatus(unittest.TestCase):
     Test class for test different status codes from `check_url_status_code` method.
 
     Methods:
-        test_url_status_200 (self, mock_get): Send a request (as a mock) to a valid URL,
-        and expect to see a 200 status code as the result.
+        test_url_status_200(self, mock_get): Simulate a valid request
+        and expects an HTTP 200 status code.
+        test_url_status_404(self, mock_get): Simulate a request
+        to an invalid URL and expects an HTTP 404 status code.
+
+        test_missing_schema_exception(self, mock_get): Somulates a MissingSchema exception when the URL is missing a scheme(e.g., 'http').
+        test_invalid_url_exception(self, mock_get): Simulates an InvalidURL exception when the URL is improperly formatted.
+        test_timeout_exception(self, mock_get): Simulates a Timeout exception when the request exceeds the specified timeout.
+        test_connection_error_exception(self, mock_get): Simulates a ConnectionError when the connection to the server fails.
+        test_http_error(self, mock_get): Simulates an HTTPError raised from the response's `raise_for_status()` method.
+        test_request_exception(self, mock_get): Simulates a generic RequestException for unexpected request error.
     """
+
     def setUp(self):
         self.TIMEOUT = 10
 
@@ -82,7 +92,7 @@ class TestURLStatus(unittest.TestCase):
     def test_invalid_url_exception(self, mock_get):
         """
         Simulate an InvalidURL exception.
-        It raises when the URL does not formatted properly.
+        It is raised when the URL does not formatted properly.
         """
         mock_get.side_effect = InvalidURL
 
@@ -93,7 +103,7 @@ class TestURLStatus(unittest.TestCase):
     def test_timeout_exception(self, mock_get):
         """
         Simulate a Timeout error exception.
-        It raises when get response from the URL,
+        It is raised when get response from the URL,
         takes longer than the `check_url_status_code` expects.
         """
         mock_get.side_effect = Timeout
@@ -105,7 +115,7 @@ class TestURLStatus(unittest.TestCase):
     def test_connection_error_exception(self, mock_get):
         """
         Simulate a ConnectionError exception.
-        Raises when connection to the server failed.
+        It is raised when connection to the server failed.
         """
         mock_get.side_effect = ConnectionError
 
@@ -130,7 +140,7 @@ class TestURLStatus(unittest.TestCase):
     def test_request_exception(self, mock_get):
         """
         Simulate a RequestException.
-        Raises when the page use gets to requested does not exists.
+        It is raised when the page use gets to requested does not exists.
         """
         mock_get.side_effect = RequestException
 
