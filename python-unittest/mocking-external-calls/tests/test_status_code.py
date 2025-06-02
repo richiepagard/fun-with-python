@@ -8,9 +8,15 @@ Classes:
 import unittest
 from unittest.mock import patch, Mock
 
-from requests.exceptions import MissingSchema
+from requests.exceptions import(
+    Timeout, ConnectionError, HTTPError,
+    RequestException, MissingSchema, InvalidURL
+)
 
 from status_code.get_status_code import check_url_status_code
+
+
+REQUESTS_GET = "requests.get"
 
 
 class TestURLStatus(unittest.TestCase):
@@ -27,7 +33,7 @@ class TestURLStatus(unittest.TestCase):
         self.HTTP_OK = 200
         self.HTTP_NOT_FOUND = 404
 
-    @patch("requests.get")
+    @patch(REQUESTS_GET)
     def test_url_status_200(self, mock_get):
         """
         Simulate a successful (HTTP 200) response from GitHub's API using mocked requests, with a 10-second timeout.
@@ -44,7 +50,7 @@ class TestURLStatus(unittest.TestCase):
 
         mock_get.assert_called_once_with(url="https://api.github.com", timeout=self.TIMEOUT)
 
-    @patch("requests.get")
+    @patch(REQUESTS_GET)
     def test_url_status_404(self, mock_get):
         """
         Simulate a not found (HTTP 404) response from an imaginary URL using mocked requests, with a 10-second timeout.
@@ -61,7 +67,7 @@ class TestURLStatus(unittest.TestCase):
 
         mock_get.assert_called_once_with(url="https://r1ch173s771ss747usc0d3.com", timeout=self.TIMEOUT)
 
-    @patch("requests.get")
+    @patch(REQUESTS_GET)
     def test_missing_schema_exception(self, mock_get):
         """
         Simulate a MissingSchema exception.
@@ -71,6 +77,29 @@ class TestURLStatus(unittest.TestCase):
 
         with self.assertRaises(MissingSchema):
             check_url_status_code(url="www.github.com", timeout=self.TIMEOUT)
+
+    @patch(REQUESTS_GET)
+    def test_invalid_url_exception(self, mock_get):
+        """
+        Simulate an InvalidURL exception.
+        It raises when the URL does not formatted properly.
+        """
+        mock_get.side_effect = InvalidURL
+
+        with self.assertRaises(InvalidURL):
+            check_url_status_code(url="github.com", timeout=self.TIMEOUT)
+
+    @patch(REQUESTS_GET)
+    def test_timeout_exception(self, mock_get):
+        """
+        Simulate a Timeout error exception.
+        It raises when get response from the URL,
+        takes longer than the `check_url_status_code` expects.
+        """
+        mock_get.side_effect = Timeout
+
+        with self.assertRaises(Timeout):
+            check_url_status_code(url="https://medium.com", timeout=0.1)
 
 
 if __name__ == '__main__':
