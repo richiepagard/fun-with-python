@@ -112,6 +112,20 @@ class TestURLStatus(unittest.TestCase):
         with self.assertRaises(ConnectionError):
             check_url_status_code(url="https://richie.com", timeout=self.TIMEOUT)
 
+    @patch(REQUESTS_GET)
+    def test_http_error(self, mock_get):
+        """
+        Simulate a HTTPError exception.
+        Not raises automatically unless call `raise_for_status()`
+        in `requests.get` response.
+        """
+        mock_response = Mock()
+        mock_response.raise_for_status.side_effect = HTTPError("404 Client Error.")
+        mock_get.return_value = mock_response
+
+        with self.assertRaises(HTTPError):
+            check_url_status_code(url="https://github.com/somethingforthisexception", timeout=self.TIMEOUT)
+
 
 if __name__ == '__main__':
     unittest.main()

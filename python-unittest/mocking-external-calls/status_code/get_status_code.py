@@ -53,8 +53,10 @@ def check_url_status_code(url: str, timeout: int) -> int:
     """
     try:
         page = requests.get(url=url, timeout=timeout)
-        logger.info("Sent a request to the \"%s\" URL with \"%i\" seconds timeout.", url, timeout)
         page_status_code = page.status_code
+        page.raise_for_status()
+
+        logger.info("Sent a request to the \"%s\" URL with \"%i\" seconds timeout.", url, timeout)
         logger.info("The status code of \"%s\" URL is \"%i\"", url, page_status_code)
 
     except MissingSchema:
@@ -82,7 +84,7 @@ def check_url_status_code(url: str, timeout: int) -> int:
         raise
 
     except HTTPError as http_error:
-        logger.exception("HTTP error occurred: %s", http_error.response.status_code)
+        logger.exception("HTTP error occurred: %s", http_error)
         logger.warning("-" * 40)
         # Re-raise the occurred exception
         raise
