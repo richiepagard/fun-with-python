@@ -8,6 +8,8 @@ Classes:
 import unittest
 from unittest.mock import patch, Mock
 
+from requests.exceptions import MissingSchema
+
 from status_code.get_status_code import check_url_status_code
 
 
@@ -58,6 +60,17 @@ class TestURLStatus(unittest.TestCase):
         self.assertEqual(status, self.HTTP_NOT_FOUND)
 
         mock_get.assert_called_once_with(url="https://r1ch173s771ss747usc0d3.com", timeout=self.TIMEOUT)
+
+    @patch("requests.get")
+    def test_missing_schema_exception(self, mock_get):
+        """
+        Simulate a MissingSchema exception.
+        It raises when the URL does not have `http` or `http`.
+        """
+        mock_get.side_effect = MissingSchema
+
+        with self.assertRaises(MissingSchema):
+            check_url_status_code(url="www.github.com", timeout=self.TIMEOUT)
 
 
 if __name__ == '__main__':
