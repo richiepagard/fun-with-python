@@ -126,6 +126,17 @@ class TestURLStatus(unittest.TestCase):
         with self.assertRaises(HTTPError):
             check_url_status_code(url="https://github.com/somethingforthisexception", timeout=self.TIMEOUT)
 
+    @patch(REQUESTS_GET)
+    def test_request_exception(self, mock_get):
+        """
+        Simulate a RequestException.
+        Raises when the page use gets to requested does not exists.
+        """
+        mock_get.side_effect = RequestException
+
+        with self.assertRaises(RequestException):
+            check_url_status_code(url="https://h3ll0w0rld.com", timeout=self.TIMEOUT)
+
 
 if __name__ == '__main__':
     unittest.main()
