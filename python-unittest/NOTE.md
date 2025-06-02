@@ -57,4 +57,12 @@ OK, I want to explain step by step to make sure I could understand :/
 - **`status = check_url_status_code(...)`:** Calls the real function, which now uses the mock.
 - **`mock_get.assert_called_once_with(...)`:** Asserts that `requests.get()` was called exactly once with the expected arguments.
 
+### Side Effect
+Using `side_effect` in Mocking when we want to affect when the function or operation start. Like raising an exception when a mock called.
+
+According t what Python docs said:
+> This can either be a function to be called when the mock is called, an iterable or an exception (class or instance) to be raised.
+
+It's easy to understand, just need to use it!
+
 ---
