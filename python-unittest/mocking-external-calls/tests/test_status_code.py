@@ -101,6 +101,17 @@ class TestURLStatus(unittest.TestCase):
         with self.assertRaises(Timeout):
             check_url_status_code(url="https://medium.com", timeout=0.1)
 
+    @patch(REQUESTS_GET)
+    def test_connection_error_exception(self, mock_get):
+        """
+        Simulate a ConnectionError exception.
+        Raises when connection to the server failed.
+        """
+        mock_get.side_effect = ConnectionError
+
+        with self.assertRaises(ConnectionError):
+            check_url_status_code(url="https://richie.com", timeout=self.TIMEOUT)
+
 
 if __name__ == '__main__':
     unittest.main()
