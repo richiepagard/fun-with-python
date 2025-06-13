@@ -24,3 +24,13 @@ A collection of exercises to practice and explore Python's built-in **`unittest`
 - Verify logging of events and exceptions.
 
 ---
+
+## File Processor -> Testing A File Processor Program
+
+**Exercise Goal:** Write a program that reads a text file and returns the number of lines, words, and characters. A funny version of `wc` command in **UNIX**. Log all operations accurately.
+
+### Test Coverage
+- Test various situation a file might has!
+- Test `unicode` maybe.
+- Test edge cases and verify raised exceptions like `FileNotFoundError`.
+- Ensure logging is correctly handled.
