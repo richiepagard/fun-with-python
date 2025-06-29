@@ -60,7 +60,7 @@ def file_processor(file_name: str) -> tuple:
     content = None
     line_number = word_number = character_number = 0
 
-    with open(file_name, 'r') as file:
+    with open(file_name, 'r', encoding='utf-8') as file:
         content = file.read()
         logger.info("File has just read successfully.")
 
