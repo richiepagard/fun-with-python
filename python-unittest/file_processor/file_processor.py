@@ -38,11 +38,7 @@ if not logger.hasHandlers():
     logger.addHandler(stream_handler)
 
 
-FILE_NAME = input("Enter the file name to read: ")
 ASCII_LETTERS = string.ascii_letters
-
-# Ensure the file exists
-Path(FILE_NAME).touch(exist_ok=True)
 
 
 def file_processor(file_name: str) -> tuple:
@@ -83,6 +79,34 @@ def main():
     The main method for run the program and call other methods.
     Gives user input and logs them, also handle the possible exceptions.
     """
+    logger.debug("Program started.")
+
+    file_name = ""
+
+    try:
+        file_name = input("Enter the file name to read: ")
+        # Ensure the file exists
+        Path(file_name).touch(exist_ok=True)
+
+        logger.info("Received user input: File name is %s.", file_name)
+        logger.info("-" * 40)
+
+    except EOFError:
+        logger.exception("End of file error. No input received.")
+        logger.warning("-" * 40)
+        # Re-raise the occured exception
+        raise
+
+    except Exception as occured_exception:
+        logger.exception("An unexpected exception occured: %s", occured_exception)
+        logger.warning("-" * 40)
+        # Re-raise the occured exception
+        raise
+
+    # Logs the file_process method
+    logger.info("File Processor result: %s", file_processor(file_name))
+    logger.info("-" * 40)
 
 
-print(file_processor(FILE_NAME))
+if __name__ == '__main__':
+    main()
