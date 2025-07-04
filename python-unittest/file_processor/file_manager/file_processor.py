@@ -56,8 +56,9 @@ def file_processor(file_name: str) -> tuple:
     content = None
     line_number = word_number = character_number = 0
 
-    with open(file_name, 'r', encoding='utf-8') as file:
-        content = file.read()
+    with open(file_name, 'rb') as file:
+        # Read and decode the opened file
+        content = file.read().decode()
         logger.info("File has just read successfully.")
 
     # Get the length of words with split by spaces
