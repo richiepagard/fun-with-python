@@ -18,6 +18,7 @@ class TestFileProcessor(unittest.TestCase):
 
     Methods:
         test_file_with_simple_content(self): Tests the file_processor function with a simple file content.
+        test_file_with_no_content(self): Tests the file_processor function with an empty file.
     """
     def setUp(self):
         """
