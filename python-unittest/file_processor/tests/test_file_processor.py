@@ -17,6 +17,7 @@ class TestFileProcessor(unittest.TestCase):
     All methods create a temporary file with specific content or maybe no content at all.
 
     Methods:
+        setUp (self): Method for prepare the test fixture.
         test_file_with_simple_content(self): Tests the file_processor function with a simple file content.
         test_file_with_no_content(self): Tests the file_processor function with an empty file.
     """
