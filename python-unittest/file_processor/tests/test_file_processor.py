@@ -19,8 +19,9 @@ class TestFileProcessor(unittest.TestCase):
     Methods:
         setUp (self): Method for prepare the test fixture.
         test_file_with_simple_content(self): Tests the file_processor function with a simple file content.
-        test_file_with_no_content(self): Tests the file_processor function with an empty file.
-        test_all_digits(self): Tests the file_processor function with all digit file content, tested `Richie` in binary for this.
+        test_file_with_no_content(self): Tests the function with an empty file.
+        test_all_digits(self): Tests the function with all digit file content, tested `Richie` in binary for this.
+        test_file_with_no_space(self): Tests the function with no space, tab, and newline content.
     """
     def setUp(self):
         """
