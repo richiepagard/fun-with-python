@@ -20,6 +20,7 @@ class TestFileProcessor(unittest.TestCase):
         setUp (self): Method for prepare the test fixture.
         test_file_with_simple_content(self): Tests the file_processor function with a simple file content.
         test_file_with_no_content(self): Tests the file_processor function with an empty file.
+        test_all_digits(self): Tests the file_processor function with all digit file content, tested `Richie` in binary for this.
     """
     def setUp(self):
         """
@@ -50,6 +51,17 @@ class TestFileProcessor(unittest.TestCase):
 
             self.assertEqual(self.line_count, 0)
             self.assertEqual(self.word_count, 0)
+            self.assertEqual(self.char_count, 0)
+
+    def test_all_digits(self):
+        with tempfile.NamedTemporaryFile(mode='w+', delete=True, encoding='utf-8') as temp_file:
+            temp_file.write("0101001\n001101001011000110110100\n00110100101100101")
+            temp_file.seek(0)
+
+            self.line_count, self.word_count, self.char_count = file_processor(temp_file.name)
+
+            self.assertEqual(self.line_count, 2)
+            self.assertEqual(self.word_count, 3)
             self.assertEqual(self.char_count, 0)
 
 
