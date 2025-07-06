@@ -100,6 +100,17 @@ class TestFileProcessor(unittest.TestCase):
             self.assertEqual(self.word_count, 0)
             self.assertEqual(self.char_count, 0)
 
+    def test_file_with_only_space(self):
+        with tempfile.NamedTemporaryFile(mode='w+', delete=True, encoding='utf-8') as temp_file:
+            temp_file.write(" ")
+            temp_file.seek(0)
+
+            self.line_count, self.word_count, self.char_count = file_processor(temp_file.name)
+
+            self.assertEqual(self.line_count, 0)
+            self.assertEqual(self.word_count, 0)
+            self.assertEqual(self.char_count, 0)
+
 
 if __name__ == '__main__':
     unittest.main()
