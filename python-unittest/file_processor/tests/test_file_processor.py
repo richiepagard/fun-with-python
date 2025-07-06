@@ -22,6 +22,7 @@ class TestFileProcessor(unittest.TestCase):
         test_file_with_no_content(self): Tests the function with an empty file.
         test_all_digits(self): Tests the function with all digit file content, tested `Richie` in binary for this.
         test_file_with_no_space(self): Tests the function with no space, tab, and newline content.
+        test_file_with_no_space(self): Tests the function with only a newline content.
     """
     def setUp(self):
         """
@@ -75,6 +76,17 @@ class TestFileProcessor(unittest.TestCase):
             self.assertEqual(self.line_count, 0)
             self.assertEqual(self.word_count, 1)
             self.assertEqual(self.char_count, 81)
+
+    def test_file_with_only_newline(self):
+        with tempfile.NamedTemporaryFile(mode='w+', delete=True, encoding='utf-8') as temp_file:
+            temp_file.write("\n")
+            temp_file.seek(0)
+
+            self.line_count, self.word_count, self.char_count = file_processor(temp_file.name)
+
+            self.assertEqual(self.line_count, 1)
+            self.assertEqual(self.word_count, 0)
+            self.assertEqual(self.char_count, 0)
 
 
 if __name__ == '__main__':
