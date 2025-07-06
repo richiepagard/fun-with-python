@@ -24,6 +24,7 @@ class TestFileProcessor(unittest.TestCase):
         test_file_with_no_space(self): Tests the function with no space, tab, and newline content.
         test_file_with_only_newline(self): Tests the function with only a newline content.
         test_file_with_only_tab(self): Tests the function with only a tab content.
+        test_file_with_only_space(self): Tests the function with only a white space content.
     """
     def setUp(self):
         """
