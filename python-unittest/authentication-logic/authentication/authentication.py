@@ -90,24 +90,19 @@ class UserAuthentication:
 
 
 def main():
-    '''
+    """
     Prompts the user to choose between 'register' or 'login' 
     and calls the corresponding method. Handles invalid input gracefully.
-    '''
-    
+    """
     auth = UserAuthentication()
 
     match input('register or login ?'):
-
         case 'register':
             auth.register()
-        
         case 'login':
-            auth.login() 
-
+            auth.login()
         case _:
             print('Invalid Input')
-
 
 
 if __name__ == '__main__':
