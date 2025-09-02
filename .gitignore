@@ -175,3 +175,6 @@ cython_debug/
 
 # Swap files
 *.swp
+
+# Database
+*.db
