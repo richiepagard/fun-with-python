@@ -38,11 +38,7 @@ class UserAuthentication:
         login():
             Prompts the user to enter a username and password, hashes the password,
             and verifies the credentials against the database.
-
-        main():
-            Prompts the user to choose between 'register' or 'login' 
-            and calls the corresponding method. Handles invalid input gracefully.
-    """
+        """
 
     def __init__(self):
         self.con = sqlite3.connect('Authentication.db')
@@ -53,16 +49,16 @@ class UserAuthentication:
         self.con.execute('CREATE TABLE IF NOT EXISTS accounts (username TEXT UNIQUE, password TEXT UNIQUE)')
         self.con.commit()
 
-    def hash_password(self, password):
+    def hash_password(self, password: str) -> str:
         return hashlib.sha256(password.encode()).hexdigest()
 
-    def existance_username(self, username):
+    def existance_username(self, username: str) -> bool:
         return self.cur.execute('SELECT 1 FROM accounts WHERE username = ?', (username,)).fetchone()
 
-    def existance_password(self, password):
+    def existance_password(self, password: str) -> bool:
         return self.cur.execute('SELECT 1 FROM accounts WHERE password = ?', (password,)).fetchone()
 
-    def validation_login(self, username, password):
+    def validation_login(self, username: str, password: str) -> bool:
         return self.cur.execute('SELECT 1 FROM accounts WHERE username = ? AND password = ?', (username, password)).fetchone()
 
     def register(self):
@@ -92,19 +88,27 @@ class UserAuthentication:
         else:
             print('Incorrect username or password!')
 
-    def main(self):
-        match input('register or login ?'):
-            case 'register':
-                self.register()
-            
-            case 'login':
-                self.login() 
 
-            case _:
-                print('Invalid input')
+def main():
+    '''
+    Prompts the user to choose between 'register' or 'login' 
+    and calls the corresponding method. Handles invalid input gracefully.
+    '''
+    
+    auth = UserAuthentication()
+
+    match input('register or login ?'):
+
+        case 'register':
+            auth.register()
+        
+        case 'login':
+            auth.login() 
+
+        case _:
+            print('Invalid Input')
 
 
 
 if __name__ == '__main__':
-    auth = UserAuthentication()
-    auth.main()
+    main()
