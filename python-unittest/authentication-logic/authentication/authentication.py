@@ -59,11 +59,11 @@ class UserAuthentication:
     def existance_username(self, username):
         return self.cur.execute('SELECT 1 FROM accounts WHERE username = ?', (username,)).fetchone()
 
-    def exist_password(self, password):
+    def existance_password(self, password):
         return self.cur.execute('SELECT 1 FROM accounts WHERE password = ?', (password,)).fetchone()
 
     def validation_login(self, username, password):
-        return self.cur.execute('SELECT 1 FROM accounts WHERE username = ? AND password = ?', (username, password))
+        return self.cur.execute('SELECT 1 FROM accounts WHERE username = ? AND password = ?', (username, password)).fetchone()
 
     def register(self):
         username = input('Please Enter Your Name: ')
@@ -99,6 +99,11 @@ class UserAuthentication:
             
             case 'login':
                 self.login() 
+
+            case _:
+                print('Invalid input')
+
+
 
 if __name__ == '__main__':
     auth = UserAuthentication()
