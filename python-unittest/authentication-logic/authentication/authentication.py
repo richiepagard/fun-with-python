@@ -96,13 +96,19 @@ def main():
     """
     auth = UserAuthentication()
 
-    match input('register or login ?'):
-        case 'register':
-            auth.register()
-        case 'login':
-            auth.login()
-        case _:
-            print('Invalid Input')
+    User_Input = input(f''' what do you want to do?
+1) Login
+2) Register
+''')
+
+    if (User_Input == '1') or (User_Input == 'Login'.lower()):
+        auth.login()
+
+    elif (User_Input == '2') or (User_Input == 'Register'.lower()):
+        auth.register()
+
+    else:
+        print('Invalid Input')
 
 
 if __name__ == '__main__':
