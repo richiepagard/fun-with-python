@@ -15,7 +15,19 @@ def subdomain_extractor(url: str) -> str | None:
         elif match1 or match2:
             subdomain = match2.group(0).split('.')[0]
             return subdomain
-            
+
+    elif url.startswith('www.'):
+        # Extract subdomain from www
+        url_split = url.split('.')
+        
+        if len(url_split) == 3:
+            subdomain = url_split[0]
+            return subdomain
+
+        elif len(url_split) == 4:
+            subdomain = url_split[1]
+            return subdomain
+
 
 if __name__ == '__main__':
     subdomain = subdomain_extractor(url)
