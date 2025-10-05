@@ -1,3 +1,17 @@
+"""
+A simple user authentication module using SQLite.
+
+Provides a small interactive utility to register and login users. Passwords
+are stored (intended to be) as SHA-256 hashes in a local SQLite database.
+
+Classes:
+    UserAuthentication: Create/manage the local accounts database and provide
+        register/login helper methods for interactive use.
+
+Functions:
+    main: Run the interactive prompt to choose register or login.
+"""
+
 import getpass
 import hashlib
 import sqlite3
@@ -5,88 +19,131 @@ import sqlite3
 
 class UserAuthentication:
     """
-    A class to handle user registration and authentication using SQLite.
-
-    This class provides methods to register new users, ensuring that usernames
-    and passwords are unique, and to authenticate existing users. Passwords
-    are securely stored using SHA-256 hashing.
-
-    Attributes:
-        con (sqlite3.Connection): SQLite database connection object.
-        cur (sqlite3.Cursor): SQLite cursor object for executing queries.
+    Handle user authentication with a local SQLite database.
 
     Methods:
-        database():
-            Creates the 'users' table if it does not already exist.
-        
-        hash_password(password: str) -> str:
-            Returns the SHA-256 hash of the given password.
-        
-        existance_username(username: str) -> bool:
-            Checks if a username already exists in the database.
-
-        existance_password(password: str) -> bool:
-            Checks if a hashed password already exists in the database.
-        
-        validation_login(username: str, password: str) -> bool:
-            Validates that the provided username and password combination exists.
-        
-        register():
-            Prompts the user to enter a username and password, hashes the password,
-            and inserts the new user into the database if both are unique.
-        
-        login():
-            Prompts the user to enter a username and password, hashes the password,
-            and verifies the credentials against the database.
-        """
+        database() -> None
+        hash_password(password: str) -> str
+        existance_username(username: str) -> bool
+        existance_password(password: str) -> bool
+        validation_login(username: str, password: str) -> bool
+        register() -> None
+        login() -> None
+    """
 
     def __init__(self):
-        self.con = sqlite3.connect('Authentication.db')
+        """
+        Initialize the database connection and ensure the accounts table exists.
+        """
+        self.con = sqlite3.connect("authentication.db")
         self.cur = self.con.cursor()
         self.database()
 
-    def database(self):
-        self.con.execute('CREATE TABLE IF NOT EXISTS accounts (username TEXT UNIQUE, password TEXT UNIQUE)')
+    def database(self) -> None:
+        """
+        Create the accounts table if missing.
+        """
+        self.con.execute(
+            "CREATE TABLE IF NOT EXISTS accounts (username TEXT UNIQUE, password TEXT UNIQUE)"
+        )
         self.con.commit()
 
     def hash_password(self, password: str) -> str:
+        """
+        Hash a password using SHA-256.
+
+        Arguments:
+            password (str): The password to hash.
+
+        Returns:
+            str: The SHA-256 hex digest of the password.
+        """
         return hashlib.sha256(password.encode()).hexdigest()
 
     def existance_username(self, username: str) -> bool:
-        return self.cur.execute('SELECT 1 FROM accounts WHERE username = ?', (username,)).fetchone()
+        """
+        Check if a username exists.
+
+        Arguments:
+            username (str): The username to check.
+
+        Returns:
+            bool: True if the username exists, False otherwise.
+        """
+        return self.cur.execute(
+            "SELECT 1 FROM accounts WHERE username = ?",
+            (username,)
+        ).fetchone()
 
     def existance_password(self, password: str) -> bool:
-        return self.cur.execute('SELECT 1 FROM accounts WHERE password = ?', (password,)).fetchone()
+        """
+        Check if a password hash exists.
+
+        Arguments:
+            password (str): The password hash to check.
+
+        Returns:
+            bool: True if the password hash exists, False otherwise.
+        """
+        return self.cur.execute(
+            "SELECT 1 FROM accounts WHERE password = ?",
+            (password,)
+        ).fetchone()
 
     def validation_login(self, username: str, password: str) -> bool:
-        return self.cur.execute('SELECT 1 FROM accounts WHERE username = ? AND password = ?', (username, password)).fetchone()
+        """
+        Validate a username/password pair.
 
-    def register(self):
-        username = input('Please Enter Your Name: ')
-        password = getpass.getpass('Please Enter Your Password: ')
-        self.hash_password(password)
+        Arguments:
+            username (str): The username to validate.
+            password (str): The password to validate.
+
+        Returns:
+            bool: True if the username/password pair is valid, False otherwise.
+        """
+        return self.cur.execute(
+            "SELECT 1 FROM accounts WHERE username = ? AND password = ?",
+            (username, password)
+        ).fetchone()
+
+    def register(self) -> None:
+        """
+        Register a new user interactively.
+        """
+
+        username = input("Please Enter Your Name: ")
+        password = getpass.getpass("Please Enter Your Password: ")
+        hashed_password = self.hash_password(password)
 
         if self.existance_username(username):
-            print('username already exists!')
+            print("username already exists!")
 
-        elif self.existance_password(password):
-            print('password already exists!')
+        elif self.existance_password(hashed_password):
+            print("password already exists!")
 
         else:
-            self.cur.execute('INSERT INTO accounts(username, password) VALUES(?, ?)', (username, password))
+            self.cur.execute(
+                "INSERT INTO accounts(username, password) VALUES(?, ?)",
+                (username, hashed_password)
+            )
+
             self.con.commit()
-            print('Register successfully!')
+            print("Register successfully!")
 
-    def login(self):
-        username = input('Please Enter Your Name: ')
-        password = getpass.getpass('Please Enter Your Password: ')
-        self.hash_password(password)
+    def login(self) -> None:
+        """
+        Login an existing user interactively.
+        """
 
-        if self.validation_login(username, password):
-            print('Login successfully! welcome to your panel')
+        username = input("Please Enter Your Name: ")
+        password = getpass.getpass("Please Enter Your Password: ")
+        hashed_password = self.hash_password(password)
+
+        if self.validation_login(username, hashed_password):
+            print("Login successfully! welcome to your panel")
 
         else:
-            print('Incorrect username or password!')
+            print("Incorrect username or password!")
 
 
 def main():
@@ -96,20 +153,15 @@ def main():
     """
     auth = UserAuthentication()
 
-    User_Input = input(f''' what do you want to do?
-1) Login
-2) Register
-''')
+    user_input = input(f"Authentication System\n1) Login\n2) Register\nPlease select an option: ")
 
-    if (User_Input == '1') or (User_Input == 'Login'.lower()):
+    if (user_input == "1") or (user_input == "Login".lower()):
         auth.login()
-
-    elif (User_Input == '2') or (User_Input == 'Register'.lower()):
+    elif (user_input == "2") or (user_input == "Register".lower()):
         auth.register()
-
     else:
-        print('Invalid Input')
+        print("Invalid Input")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
