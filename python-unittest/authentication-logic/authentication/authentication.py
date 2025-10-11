@@ -45,14 +45,12 @@ if not logger.hasHandlers():
     logger.addHandler(file_handler)
     logger.addHandler(stream_handler)
 
-
 class UserAuthentication:
     """
     Handle user authentication with a local SQLite database.
 
     Methods:
         database() -> None
-        hash_password(password: str) -> str
         existance_username(username: str) -> bool
         existance_password(password: str) -> bool
         validation_login(username: str, password: str) -> bool
@@ -81,22 +79,6 @@ class UserAuthentication:
         logger.debug("Creating accounts table if not exists")
 
         self.con.commit()
-
-    def hash_password(self, password: str) -> str:
-        """
-        Hash a password using SHA-256.
-
-        Arguments:
-            password (str): The password to hash.
-
-        Returns:
-            str: The SHA-256 hex digest of the password.
-        """
-        logger.debug("Hashing password")
-        hashed = hashlib.sha256(password.encode()).hexdigest()
-        logger.debug(f"Hashed password: {hashed}")
-
-        return hashed
 
     def existance_username(self, username: str) -> bool:
         """
@@ -152,7 +134,7 @@ class UserAuthentication:
         """
         Register a new user interactively.
         """
-        hashed_password = self.hash_password(password)
+        hashed_password = hash_password(password)
 
         if self.existance_username(username):
             logger.error("Username already exists!")
@@ -171,12 +153,29 @@ class UserAuthentication:
         """
         Login an existing user interactively.
         """
-        hashed_password = self.hash_password(password)
+        hashed_password = hash_password(password)
 
         if self.validation_login(username, hashed_password):
             logger.info("Login successful!")
         else:
             logger.error("Incorrect username or password!")
+
+
+def hash_password(password: str) -> str:
+    """
+    Hash a password using SHA-256.
+
+    Arguments:
+        password (str): The password to hash.
+
+    Returns:
+        str: The SHA-256 hex digest of the password.
+    """
+    logger.debug("Hashing password")
+    hashed = hashlib.sha256(password.encode()).hexdigest()
+    logger.debug(f"Hashed password: {hashed}")
+
+    return hashed
 
 
 def get_user_input() -> tuple[str, str, str]:
@@ -201,7 +200,7 @@ def get_user_input() -> tuple[str, str, str]:
         password = getpass.getpass("Please Enter Your Password: ")
 
         logger.info(f"User provided username: {username}")
-        logger.info(f"User provided password: {password}")
+        logger.info(f"User provided password: {hash_password(password)}")
         logger.info(f"User selected option: {action}")
 
         return username, password, action
