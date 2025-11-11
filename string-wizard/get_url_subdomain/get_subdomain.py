@@ -1,7 +1,7 @@
 import re
 
 
-def subdomain_extractor(url: str) -> str:
+def subdomain_extractor(url: str) -> set:
     """
     Extract the main subdomain (or a list of subdomains) from a given URL.
 
@@ -16,38 +16,24 @@ def subdomain_extractor(url: str) -> str:
         url (str): The full URL or domain to extract the subdomain from.
 
     Returns:
-        str: The extracted subdomain or a descriptive message when multiple
-            subdomains exist.
+        set: List of all subdomains in the gotten URL.
     """
+    subdomains = set()
+    url = url.lower().strip()
+
     if url.startswith('http'):
-        # Extracts the subdomain using regex to find the entire URL and then
-        # extracts the main subdomain
-        http = re.search(r'(?<=http://).*', url)
-        https = re.search(r'(?<=https://).*', url)
+        # Removes the 'http' and 'https' from the URL
+        url = re.sub(r'^https?://', '', url, count=1)
+        domain = url.split("/")[0]
+        parts = domain.split(".")
 
-        if http:
-            subdomain = http.group(0).split('.')[0]
-            return subdomain
-        elif https:
-            subdomain = https.group(0).split('.')[0]
-            return subdomain
+        # Validate the URL, it must be at least subdomain + domain + tld
+        if len(parts) <= 2:
+            return set()
 
-    elif url.startswith('www.'):
-        # Extract subdomain from www 
-        url_split = url.split('.')
-
-        # Extract the main subdomain
-        for i in range(len(url_split)):
-            # Check if the current part is the last one (the main domain)
-            if i == len(url_split) - 1:
-                # If it's the last part, it means we are at the main domain
-                subdomain = url_split[0]
-                return subdomain
-            # If it's not the last part, we are still in the subdomain
-            elif len(url_split) > 3:
-                subdomains = url_split[:len(url_split) - 2]
-                main_subdomain = url_split[0]
-                return f"subdomains are: {subdomains}, but the main subdomain is: {main_subdomain}"
+        # Get all subdomains excluding the last two segments
+        subdomains = set(sub for sub in parts[:-2])
+        return subdomains
 
 
 def main():
