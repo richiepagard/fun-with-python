@@ -13,3 +13,9 @@ This is kind of **Wordle** game which let you guessing words thise match to the 
 
 e.g. abcde: 4 2 -> means 4 correct letters compared to the generated word and 2 of those corrected letters are in the right place/index.
 ```
+
+### Execute The Module
+```bash
+# God to the "fun-with-python" root path and run:
+python3 -m string-wizard.word_guessing.word_guessing
+```
